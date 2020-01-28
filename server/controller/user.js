@@ -35,3 +35,41 @@ exports.postUser = [
     }
   }
 ];
+
+exports.loginUser = [
+  validators.loginUser,
+  async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      const user = await User.findOne({ username })
+        .select('+username +name +email +password')
+        .lean();
+
+      if (!user) {
+        return res.status(401).send('invalid username or password');
+      }
+
+      const isEqual = await bcrypt.compare(password, user.password);
+
+      if (!isEqual) {
+        return res.status(401).send('invalid username or password');
+      }
+
+      const token = await createToken({ username });
+
+      res.json({
+        user: {
+          _id: user._id,
+          username: user.username,
+          name: user.name,
+          email: user.email
+        },
+        token
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(500).send();
+    }
+  }
+];

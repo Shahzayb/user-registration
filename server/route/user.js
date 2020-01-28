@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', controller.postUser);
 
 // login user
-// router.post('/login', controller.loginUser);
+router.post('/login', controller.loginUser);
 
 // get all users or search users with pagination
 // router.get('/', controller.getUser);

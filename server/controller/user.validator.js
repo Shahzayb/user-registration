@@ -62,3 +62,18 @@ exports.postUser = [
   ],
   errorMiddleware
 ];
+
+exports.loginUser = [
+  body('username')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Please enter username')
+    .customSanitizer(username => username.toLowerCase()),
+  body('password')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('please enter password'),
+  errorMiddleware
+];
