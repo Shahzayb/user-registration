@@ -10,7 +10,7 @@ router.post('/', controller.postUser);
 router.post('/login', controller.loginUser);
 
 // get all users or search users with pagination
-// router.get('/', controller.getUser);
+router.get('/', controller.getUser);
 
 // forget password
 // router.post('/forgot-password', router.forgotPassword);
