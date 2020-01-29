@@ -73,3 +73,33 @@ exports.loginUser = [
     }
   }
 ];
+
+exports.getUser = [
+  validators.getUser,
+  async (req, res) => {
+    try {
+      const { page, size, q } = req.query;
+      const skip = (page - 1) * size;
+
+      let search = {};
+      let sort = { _id: -1 };
+      const project = { username: 1, name: 1, _id: 1 };
+
+      if (q) {
+        search = { $text: { $search: q } };
+        sort = { score: { $meta: 'textScore' } };
+        project.score = { $meta: 'textScore' };
+      }
+
+      const users = await User.find(search, project)
+        .sort(sort)
+        .skip(skip)
+        .limit(size);
+
+      res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.status(500).send();
+    }
+  }
+];
