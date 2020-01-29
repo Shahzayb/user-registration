@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+const { body, query, validationResult } = require('express-validator');
 const User = require('../model/user');
 
 const errorMiddleware = (req, res, next) => {
@@ -75,5 +75,38 @@ exports.loginUser = [
     .not()
     .isEmpty()
     .withMessage('please enter password'),
+  errorMiddleware
+];
+
+exports.getUser = [
+  query('q')
+    .trim()
+    .customSanitizer(q => q && q.toLowerCase()),
+  query('page')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('page number is required')
+    .toInt()
+    .custom(page => {
+      if (page < 1) {
+        return Promise.reject();
+      }
+      return true;
+    })
+    .withMessage('page should be a number. and should be greater than 0'),
+  query('size')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('size number is required')
+    .toInt()
+    .custom(size => {
+      if (size < 1 || size > 100) {
+        return Promise.reject();
+      }
+      return true;
+    })
+    .withMessage('size should be a number and between 1 and 100'),
   errorMiddleware
 ];
