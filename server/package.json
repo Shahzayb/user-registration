@@ -23,6 +23,7 @@
   "author": "Shahzaib Sarwar <imshahzayb@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^6.5.1",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "express-validator": "^6.3.1",

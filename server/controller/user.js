@@ -2,7 +2,9 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../model/user');
 const validators = require('./user.validator');
-const { createToken } = require('../util/jwt');
+const { createToken, createTokenForResetPassword } = require('../util/jwt');
+const url = require('../util/url');
+const email = require('../util/email');
 
 exports.postUser = [
   validators.postUser,
@@ -56,7 +58,7 @@ exports.loginUser = [
         return res.status(401).send('invalid username or password');
       }
 
-      const token = await createToken({ username });
+      const token = createToken({ username });
 
       res.json({
         user: {
@@ -97,6 +99,38 @@ exports.getUser = [
         .limit(size);
 
       res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.status(500).send();
+    }
+  }
+];
+
+exports.forgotPassword = [
+  validators.forgotPassword,
+  async (req, res) => {
+    try {
+      // get user by email
+      const user = await User.findOne(
+        { email: req.body.email },
+        { username: 1, email: 1, password: 1, createdAt: 1 }
+      ).lean();
+
+      // generate reset jwt token
+      const resetToken = createTokenForResetPassword(user);
+      // generate reset link
+      const resetLink = url.getPasswordResetURL(user._id, resetToken);
+      // generate reset email template
+      const resetEmailTemplate = email.generateResetPasswordTemplate(
+        user.email,
+        user.username,
+        resetLink
+      );
+
+      // send email
+      email.sendEmail(resetEmailTemplate).catch(console.log);
+
+      res.send();
     } catch (e) {
       console.log(e);
       res.status(500).send();

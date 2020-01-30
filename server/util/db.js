@@ -11,11 +11,12 @@ const dbOpts = {
   useFindAndModify: false
 };
 
-const uri = await mongod.getConnectionString();
-
-mongoose.connect(uri, dbOpts).catch(err => {
-  console.error("couldn't connect to the database", err);
-  process.exit(1);
+mongod.getConnectionString().then(uri => {
+  console.log('database url: ' + uri);
+  mongoose.connect(uri, dbOpts).catch(err => {
+    console.error("couldn't connect to the database", err);
+    process.exit(1);
+  });
 });
 
 const db = mongoose.connection;
@@ -24,4 +25,4 @@ db.on('error', err => {
   console.log(err);
 });
 
-db.on('open', () => console.log('connected to the database at: ' + uri));
+db.on('open', () => console.log('connected to the database'));

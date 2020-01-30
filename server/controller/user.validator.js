@@ -110,3 +110,27 @@ exports.getUser = [
     .withMessage('size should be a number and between 1 and 100'),
   errorMiddleware
 ];
+
+exports.forgotPassword = [
+  body('email')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('please enter email address')
+    .customSanitizer(email => email.toLowerCase())
+    .isEmail()
+    .withMessage('please enter valid email')
+    .custom(email => {
+      return User.exists({ email }).then(exist => {
+        if (!exist) {
+          throw new Error();
+        }
+        return true;
+      });
+    })
+    .withMessage(
+      'account with this email does not exist. please enter some other email address'
+    ),
+
+  errorMiddleware
+];

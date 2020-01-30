@@ -13,6 +13,6 @@ router.post('/login', controller.loginUser);
 router.get('/', controller.getUser);
 
 // forget password
-// router.post('/forgot-password', router.forgotPassword);
+router.post('/forgot-password', controller.forgotPassword);
 
 module.exports = router;
