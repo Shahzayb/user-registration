@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../model/user');
 const validators = require('./user.validator');
@@ -134,6 +135,41 @@ exports.forgotPassword = [
     } catch (e) {
       console.log(e);
       res.status(500).send();
+    }
+  }
+];
+
+exports.resetPassword = [
+  validators.resetPassword,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.userId);
+      const secretKey = user.password + '-' + user.createdAt;
+      const payload = jwt.verify(req.query.token, secretKey);
+
+      if (payload.userId !== req.params.userId) {
+        return res.status(401).send();
+      }
+
+      const newHashPassword = await bcrypt.hash(req.body.password, 8);
+      user.password = newHashPassword;
+
+      await user.save();
+
+      const token = createToken({ username: user.username });
+
+      res.json({
+        user: {
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email
+        },
+        token
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(401).send();
     }
   }
 ];

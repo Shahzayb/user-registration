@@ -1,4 +1,4 @@
-const { body, query, validationResult } = require('express-validator');
+const { body, query, param, validationResult } = require('express-validator');
 const User = require('../model/user');
 
 const errorMiddleware = (req, res, next) => {
@@ -132,5 +132,28 @@ exports.forgotPassword = [
       'account with this email does not exist. please enter some other email address'
     ),
 
+  errorMiddleware
+];
+
+exports.resetPassword = [
+  param('userId')
+    .custom(userId => {
+      return User.exists({ _id: userId }).then(exist => {
+        if (!exist) {
+          throw new Error();
+        }
+        return true;
+      });
+    })
+    .withMessage(
+      'account with this userId does not exist. please enter valid userId'
+    ),
+  body('password')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('please enter password')
+    .isLength({ min: 8 })
+    .withMessage('please enter password with at least 8 character'),
   errorMiddleware
 ];

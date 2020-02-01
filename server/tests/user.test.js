@@ -3,7 +3,7 @@ const supertest = require('supertest');
 const bcrypt = require('bcryptjs');
 
 const User = require('../model/user');
-const { createToken } = require('../util/jwt');
+const { createToken, createTokenForResetPassword } = require('../util/jwt');
 
 const req = supertest(app);
 
@@ -30,8 +30,6 @@ describe('GET /api/user', () => {
       .query({ page: 1 })
       .query({ size: 1 })
       .query({ q: user1.username });
-
-    console.log(res.body);
 
     expect(res.body[0].username).toBe(user1.username);
 
@@ -158,6 +156,69 @@ describe('POST /api/user', () => {
     const user = await User.findById(res.body.user._id, { username: 1 }).lean();
 
     expect(user.username).toEqual(res.body.user.username);
+    done();
+  });
+});
+
+describe('POST /api/user/reset-password', () => {
+  test('user can reset password', async done => {
+    const userObj = {
+      username: 'shah',
+      name: 'shahzaib',
+      email: 'imshahzayb@gmail.com',
+      password: 'dummy hashed password'
+    };
+    const newPassword = 'new password';
+
+    const user = new User(userObj);
+
+    await user.save();
+
+    const resetToken = createTokenForResetPassword(user);
+
+    const res = await req
+      .post(`/api/user/${user._id}/reset-password`)
+      .query({ token: resetToken })
+      .send({ password: newPassword });
+
+    await User.findById(res.body.user._id, { password: 1 })
+      .lean()
+      .then(user => {
+        return bcrypt.compare(newPassword, user.password);
+      })
+      .then(isCorrect => {
+        expect(isCorrect).toBe(true);
+      });
+
+    done();
+  });
+
+  test('user cannot reset password with invalid token', async done => {
+    const userObj = {
+      username: 'shah',
+      name: 'shahzaib',
+      email: 'imshahzayb@gmail.com',
+      password: 'dummy hashed password'
+    };
+    const newPassword = 'new password';
+
+    const user = new User(userObj);
+
+    await user.save();
+
+    const resetToken = createTokenForResetPassword({
+      password: 'asfsfs',
+      createdAt: new Date().toISOString(),
+      _id: user._id
+    });
+
+    const res = await req
+      .post(`/api/user/${user._id}/reset-password`)
+      .query({ token: resetToken })
+      .send({ password: newPassword });
+
+    expect(res.status).toBe(401);
+
     done();
   });
 });
