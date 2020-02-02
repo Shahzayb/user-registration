@@ -13,13 +13,15 @@ describe('GET /api/user', () => {
       username: 'shah1',
       name: 'shahzaib',
       email: 'im1@gmail.com',
-      password: 'dummy hash password'
+      password: 'dummy hash password',
+      profilePic: 'url'
     });
     const user2 = new User({
       username: 'shah2',
       name: 'shahzaib2',
       email: 'im2@gmail.com',
-      password: 'dummy hash password 2'
+      password: 'dummy hash password 2',
+      profilePic: 'url'
     });
 
     await user1.save();
@@ -57,13 +59,15 @@ describe('GET /api/user', () => {
       username: 'shah1',
       name: 'shahzaib',
       email: 'im1@gmail.com',
-      password: 'dummy hash password'
+      password: 'dummy hash password',
+      profilePic: 'url'
     });
     const user2 = new User({
       username: 'shah2',
       name: 'shahzaib2',
       email: 'im2@gmail.com',
-      password: 'dummy hash password 2'
+      password: 'dummy hash password 2',
+      profilePic: 'url'
     });
 
     await user1.save();
@@ -97,7 +101,8 @@ describe('POST /api/user/login', () => {
       username: 'shah',
       name: 'shahzaib',
       email: 'imshahzayb@gmail.com',
-      password: '12345678'
+      password: '12345678',
+      profilePic: 'url'
     };
 
     const hashPass = await bcrypt.hash(userObj.password, 8);
@@ -121,7 +126,8 @@ describe('POST /api/user/login', () => {
       username: 'shah',
       name: 'shahzaib',
       email: 'imshahzayb@gmail.com',
-      password: '12345678'
+      password: '12345678',
+      profilePic: 'url'
     };
 
     const hashPass = await bcrypt.hash(userObj.password, 8);
@@ -145,7 +151,8 @@ describe('POST /api/user', () => {
       username: 'Shah',
       name: 'shahZaib',
       email: 'imshahzayb@gmail.com',
-      password: '12345678'
+      password: '12345678',
+      profilePic: 'url'
     };
 
     const res = await req
@@ -166,7 +173,8 @@ describe('POST /api/user/reset-password', () => {
       username: 'shah',
       name: 'shahzaib',
       email: 'imshahzayb@gmail.com',
-      password: 'dummy hashed password'
+      password: 'dummy hashed password',
+      profilePic: 'url'
     };
     const newPassword = 'new password';
 
@@ -198,7 +206,8 @@ describe('POST /api/user/reset-password', () => {
       username: 'shah',
       name: 'shahzaib',
       email: 'imshahzayb@gmail.com',
-      password: 'dummy hashed password'
+      password: 'dummy hashed password',
+      profilePic: 'url'
     };
     const newPassword = 'new password';
 

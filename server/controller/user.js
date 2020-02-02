@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 
 const User = require('../model/user');
 const validators = require('./user.validator');
@@ -11,16 +12,19 @@ exports.postUser = [
   validators.postUser,
   async (req, res) => {
     try {
-      const [password, token] = await Promise.all([
+      const [password, profilePic] = await Promise.all([
         bcrypt.hash(req.body.password, 8),
-        createToken({ username: req.body.username })
+        gravatar.url(req.body.email)
       ]);
+
+      const token = createToken({ username: req.body.username });
 
       const user = await User.create({
         username: req.body.username,
         name: req.body.name,
         email: req.body.email,
-        password
+        password,
+        profilePic
       });
 
       res.status(201).json({
@@ -28,7 +32,8 @@ exports.postUser = [
           _id: user._id,
           username: user.username,
           name: user.name,
-          email: user.email
+          email: user.email,
+          profilePic: user.profilePic
         },
         token
       });
@@ -46,7 +51,7 @@ exports.loginUser = [
       const { username, password } = req.body;
 
       const user = await User.findOne({ username })
-        .select('+username +name +email +password')
+        .select('+username +name +email +password +profilePic')
         .lean();
 
       if (!user) {
@@ -66,7 +71,8 @@ exports.loginUser = [
           _id: user._id,
           username: user.username,
           name: user.name,
-          email: user.email
+          email: user.email,
+          profilePic: user.profilePic
         },
         token
       });
@@ -86,7 +92,12 @@ exports.getUser = [
 
       let search = {};
       let sort = { _id: -1 };
-      const project = { username: 1, name: 1, _id: 1 };
+      const project = {
+        username: 1,
+        name: 1,
+        _id: 1,
+        profilePic: 1
+      };
 
       if (q) {
         search = { $text: { $search: q } };
@@ -163,7 +174,8 @@ exports.resetPassword = [
           _id: user._id,
           name: user.name,
           username: user.username,
-          email: user.email
+          email: user.email,
+          profilePic: user.profilePic
         },
         token
       });
