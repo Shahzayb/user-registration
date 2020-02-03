@@ -21,8 +21,6 @@ exports.postUser = [
         gravatar.url(req.body.email)
       ]);
 
-      const token = createToken({ username: req.body.username });
-
       const user = await User.create({
         username: req.body.username,
         name: req.body.name,
@@ -30,6 +28,8 @@ exports.postUser = [
         password,
         profilePic
       });
+
+      const token = createToken({ id: user._id });
 
       res.status(201).json({
         user: {
@@ -54,9 +54,7 @@ exports.loginUser = [
     try {
       const { username, password } = req.body;
 
-      const user = await User.findOne({ username })
-        .select('+username +name +email +password +profilePic')
-        .lean();
+      const user = await User.findOne({ username }).lean();
 
       if (!user) {
         return res.status(401).send('invalid username or password');
@@ -68,7 +66,7 @@ exports.loginUser = [
         return res.status(401).send('invalid username or password');
       }
 
-      const token = createToken({ username });
+      const token = createToken({ id: user._id });
 
       res.json({
         user: {
@@ -171,7 +169,7 @@ exports.resetPassword = [
 
       await user.save();
 
-      const token = createToken({ username: user.username });
+      const token = createToken({ id: user._id });
 
       res.json({
         user: {
