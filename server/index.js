@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 
@@ -12,6 +13,7 @@ const logger = require('morgan');
 const userRoute = require('./route/user');
 
 // mount middlewares
+app.use(cors());
 app.use(logger('combined'));
 app.use(express.json());
 
