@@ -8,6 +8,10 @@ const { createToken, createTokenForResetPassword } = require('../util/jwt');
 const url = require('../util/url');
 const email = require('../util/email');
 
+exports.getMyProfile = (req, res) => {
+  res.json({ user: req.user, token: req.token });
+};
+
 exports.postUser = [
   validators.postUser,
   async (req, res) => {
