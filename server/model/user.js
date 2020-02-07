@@ -29,8 +29,8 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.index(
-  { user: 'text', username: 'text' },
-  { weights: { user: 5, username: 3 } }
+  { name: 'text', username: 'text' },
+  { weights: { name: 5, username: 3 } }
 );
 
 const User = mongoose.model('user', UserSchema);
