@@ -31,13 +31,15 @@ cd server && npm install
 
 **inside `.env` file, create these key value pairs**
 
-`JWT_SECRET=secret`
+```
+JWT_SECRET=secret
 
-`SENDGRID_API_KEY=sendgrid will provide this value`
+SENDGRID_API_KEY=sendgrid will provide this value
 
-`COMPANY_EMAIL=user-registration-vu@no-reply.com`
+COMPANY_EMAIL=user-registration-vu@no-reply.com
 
-`CLIENT_BASE_URL=http://localhost:3000`
+CLIENT_BASE_URL=http://localhost:3000
+```
 
 
 
