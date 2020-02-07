@@ -2,7 +2,7 @@ var faker = require('faker');
 const User = require('../model/user');
 
 exports.setup = () => {
-  for (let i = 0; i < 2500; i++) {
+  for (let i = 0; i < 3000; i++) {
     const name = faker.name.findName();
     const username = faker.name.findName() + ' ' + i;
     const email = faker.internet.email();

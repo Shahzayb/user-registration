@@ -144,7 +144,7 @@ exports.forgotPassword = [
       // send email
       email.sendEmail(resetEmailTemplate).catch(console.log);
 
-      res.send();
+      res.send({ msg: 'reset link is sent successfully.' });
     } catch (e) {
       console.log(e);
       res.status(500).send();
