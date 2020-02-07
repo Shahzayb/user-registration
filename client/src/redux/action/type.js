@@ -1,0 +1,9 @@
+export const LOGIN_START = 'LOGIN_START';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGOUT = 'LOGOUT';
+export const REGISTER_USER = 'REGISTER_USER';
+export const FETCH_USER = 'FETCH_USER';
+export const RESET_USER = 'RESET_USER';
+export const SEARCH_USER = 'SEARCH_USER';
+export const RESET_SEARCH = 'RESET_SEARCH';
