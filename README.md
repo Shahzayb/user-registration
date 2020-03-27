@@ -58,6 +58,7 @@ npm run test
 * [NPM](https://www.npmjs.com/)
 * [Create React App](https://create-react-app.dev/)
 * [Redux](https://redux.js.org/introduction/getting-started)
+* [Send Grid](https://sendgrid.com/)
 
 ## Versioning
 
